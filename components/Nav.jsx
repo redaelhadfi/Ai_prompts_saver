@@ -4,24 +4,25 @@ import logo from '../public/logo.png';
 import menu from '../public/menu.png';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import {singIn, signOut, useSession,getProviders} from 'next-auth/react';
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { data } from 'autoprefixer';
+
+
 
 const Nav = () => {
-    let Logged = true;
     const [open, setOpen] = useState(false);
-    const [User, setUser] = useState('User');
-    //    set User('User');
 
+    const { data: session, status } = useSession();
 
-   const [providers, setProviders] = useState(null);
+    const [providers, setProviders] = useState(null);
 
     useEffect(() => {
-        const setProviders = async () => {
-            const response = await getProviders();
-        setProviders(response);}
-        setProviders();
-           
-        },[])
+        (async () => {
+            const res = await getProviders();
+            setProviders(res);
+        })();
+    }, []);
+
 
 
 
@@ -33,7 +34,6 @@ const Nav = () => {
 
 
             {/* header */}
-
             <nav className=" flex flex-row gap-10  mt-5 z-6">
                 <Link href="/">
 
@@ -48,29 +48,58 @@ const Nav = () => {
                 </div>
 
 
-                {/*desktop nav*/}
+
+
+                {/* desktop nav */}
+
+
 
                 <div className=" absolute hidden md:flex  flex flex-row gap-10 -right-[-5%] ">
-                    {Logged ?
-                        <button className="bg_btn">
-                            <Link href="/login">
-                                Login
-                            </Link>
-                        </button>
-                        :
-                        <div className='flex flex-row gap-10 full-rounded center'>
-                            <button className="bg_btn mt-2" onClick={signOut}>
-                        
-                                    Sign Out
-                        
-                            </button>
-                            <Image className="rounded-full" src={logo} alt="user" width={50} height={50} />
-                        </div>
+                    {status === "authenticated" ?
+                        (
 
+                            <div className='flex flex-row gap-10 full-rounded center'>
+                                <button className="bg_btn mt-2" onClick={() => signOut()} >
+
+                                    Sign Out
+
+                                </button>
+
+                                <Image className="rounded-full" src={session?.user.image} alt="user" width={50} height={50} />
+                            </div>
+                        )
+                        :
+                        <>{
+                            providers && Object.values(providers).map((provider) => (
+                                <div key={provider.name}>
+
+
+                                    <button className="bg_btn" onClick={() => signIn(provider.id)}>
+
+                                        signIn with {provider.name}
+
+                                    </button>
+                                </div>
+                            ))}
+                        </>
 
                     }
-                    {/*mobile nav*/}
+
                 </div>
+
+
+
+
+
+
+
+                {/*mobile nav*/}
+
+
+
+
+
+
 
                 <div className="absolute flex flex-row gap-1 md:hidden -right-[-5%]" >
 
@@ -78,8 +107,7 @@ const Nav = () => {
                     <Image src={menu} alt="user" width={40} height={40} onClick={() => setOpen(!open)} />
                     {open &&
                         <div className=' flex flex-col gap-1 absolute w-60 h-40 top-[50px] right-1  bg-sky-500/50 rounded-lg items-center justify-center  shadow-2xl '>
-                            <Image src={logo} alt="user" width={70} height={70} className='rounded-full center border-solid border-2 border-indigo-600/60 '></Image>
-                            <h1 className='text-2xl font-bold'>{User}</h1>
+                            <Image className="rounded-full" src={session?.user.image} alt="user" width={50} height={50} />                            <h1 className='text-2xl font-bold'>{session?.user.name} </h1>
                             <button className=" z-40 bg_btn" onClick={signOut}>
                                 Sign Out
                             </button>
@@ -95,7 +123,6 @@ const Nav = () => {
 
 
                 </div>
-
 
 
 
