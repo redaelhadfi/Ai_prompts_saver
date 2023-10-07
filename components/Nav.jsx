@@ -5,7 +5,7 @@ import menu from '../public/menu.png';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-import { data } from 'autoprefixer';
+
 
 
 
@@ -34,14 +34,16 @@ const Nav = () => {
 
 
             {/* header */}
-            <nav className=" flex flex-row gap-10  mt-5 z-6">
-                <Link href="/">
+            <nav className=" flex flex-row gap-10  mt-5 z-50">
+              
 
-                    <div className="flex ml-10 z-6 ">
+                    <div className="flex ml-10  ">
+                        <Link href="/">
                         <Image src={logo} alt="logo" width={60} height={60} />
+                        </Link>
                     </div>
 
-                </Link>
+             
 
                 <div className="flex flex-row gap-10 md:mt-[16px]  max-md:hidden z-6">
                     <h1 className="text-2xl font-bold text-cyan-800">UR Saver</h1>
@@ -102,10 +104,26 @@ const Nav = () => {
 
 
                 <div className="absolute flex flex-row gap-1 md:hidden -right-[-5%]" >
-
-
+                   
+                    {status === "authenticated" ?
                     <Image src={menu} alt="user" width={40} height={40} onClick={() => setOpen(!open)} />
-                    {open &&
+                    :   
+                    <>{
+                        providers && Object.values(providers).map((provider) => (
+                            <div key={provider.name}>
+
+
+                                <button className="bg_btn" onClick={() => signIn(provider.id)}>
+
+                                    signIn with {provider.name}
+
+                                </button>
+                            </div>
+                        ))}
+                    </>
+                    
+                }
+                    {open & status === "authenticated" ?
                         <div className=' flex flex-col gap-1 absolute w-60 h-40 top-[50px] right-1  bg-sky-500/50 rounded-lg items-center justify-center  shadow-2xl '>
                             <Image className="rounded-full" src={session?.user.image} alt="user" width={50} height={50} />                            <h1 className='text-2xl font-bold'>{session?.user.name} </h1>
                             <button className=" z-40 bg_btn" onClick={signOut}>
@@ -113,6 +131,11 @@ const Nav = () => {
                             </button>
 
                         </div>
+                        :<> 
+                        
+                        </>
+
+
 
 
 
