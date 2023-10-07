@@ -2,7 +2,7 @@
 
 ## Description
 
-AI Prompt Saver is a tool that helps developers save and organize their AI-generated prompts. With this tool, you can save and share ur prompts.
+AI Prompt Saver is a web app that helps developers save and organize their AI-generated prompts. With this tool, you can save and share ur prompts.
 
 ## Features
 
@@ -21,7 +21,7 @@ AI Prompt Saver is a tool that helps developers save and organize their AI-gener
  
 ![image](./public/image.png)
 
-##link
+## App Link
 - [link to the app](https://ai-prompts-saver.vercel.app/)
 
 ## Contributing
